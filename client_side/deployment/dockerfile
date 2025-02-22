@@ -1,0 +1,21 @@
+# Use Node 18 (Alpine for a smaller image)
+FROM node:18-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files and install production dependencies
+COPY package*.json ./
+RUN npm install --production
+
+# Copy the rest of your app source code
+COPY . .
+
+# Build the TypeScript code (assumes you have a build script, e.g. tsc)
+RUN npm run build
+
+# Expose the port your Express app uses (adjust if needed)
+EXPOSE 3000
+
+# Run the compiled app
+CMD ["node", "dist/index.js"]

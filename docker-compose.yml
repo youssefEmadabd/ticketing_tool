@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: ./server/deployment
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      MONGODB_URL: mongodb+srv://youssef:WZfqfcP0yO9nRsSy@cluster0.qcqw0.mongodb.net/ticketingService
+      JWT_SECRET: TH!s!sAR@nD0m$ecreTKEie
+
+  frontend:
+    build:
+      context: ./client_side/deployment
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      # This environment variable will be available during build time (for Vite) 
+      # if your code reads it via import.meta.env.VITE_BACKEND_URL
+      VITE_BACKEND_URL: "http://backend:3000"
+    depends_on:
+      - backend

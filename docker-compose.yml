@@ -3,7 +3,7 @@ version: "3.9"
 services:
   backend:
     build:
-      context: ./server/deployment
+      context: ./server
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
@@ -15,13 +15,14 @@ services:
 
   frontend:
     build:
-      context: ./client_side/deployment
+      context: ./client_side
       dockerfile: Dockerfile
     ports:
-      - "5000:5000"
+      - "5001:5001"
     environment:
       # This environment variable will be available during build time (for Vite) 
       # if your code reads it via import.meta.env.VITE_BACKEND_URL
       VITE_BACKEND_URL: "http://backend:3000"
+      VITE_PORT: 5001
     depends_on:
       - backend

@@ -8,7 +8,7 @@ export default defineConfig({
     },
   server: {
     open: true,
-    port: 3000, // Adjust as needed
+    port: parseInt(process.env.VITE_PORT || '5173')
   },
   define: {
     'process.env': {}, // Polyfill for process.env

@@ -5,6 +5,7 @@ import TicketModal from "./components/TicketModal";
 import { useAppDispatch, useAppSelector } from "./redux/hooks";
 import type { Ticket } from "./redux/ticketsSlice";
 import { fetchTickets, setStatusFilter } from "./redux/ticketsSlice";
+import { apiUrl } from "./config";
 
 const App: React.FC = () => {
   const [isModalOpen, setModalOpen] = React.useState(false);
@@ -16,6 +17,21 @@ const App: React.FC = () => {
   useEffect(() => {
     dispatch(fetchTickets(statusFilter));
   }, [statusFilter, dispatch]);
+
+  const deleteTicket = async (id: string) => {
+    try {
+      const res = await fetch(`${apiUrl}/v1/tickets/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) throw new Error("Failed to delete ticket");
+      setModalOpen(false)
+      // Remove deleted ticket from UI
+      dispatch(fetchTickets(statusFilter));
+        } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <Container sx={{ mt: 4 }}>
@@ -39,7 +55,7 @@ const App: React.FC = () => {
       {loading ? <CircularProgress /> : error ? <Typography color="error">{error}</Typography> : (
         tickets.map((ticket: Ticket) => (
           <div key={ticket.id} onClick={() => { setSelectedTicket(ticket); setModalOpen(true); }}>
-            <TicketCard ticket={ticket} />
+            <TicketCard ticket={ticket} onDelete={deleteTicket} />
           </div>
         ))
       )}

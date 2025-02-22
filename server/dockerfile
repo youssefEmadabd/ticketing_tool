@@ -2,17 +2,17 @@
 FROM node:18-alpine
 
 # Set working directory
-WORKDIR /app
+WORKDIR /build
 
 # Copy package files and install production dependencies
-COPY package*.json ./
-RUN npm install --production
+COPY ./ ./
+RUN npm install
 
 # Copy the rest of your app source code
 COPY . .
 
-# Build the TypeScript code (assumes you have a build script, e.g. tsc)
-RUN npm run build
+# Build the TypeScript code
+RUN npm run postinstall
 
 # Expose the port your Express app uses (adjust if needed)
 EXPOSE 3000
